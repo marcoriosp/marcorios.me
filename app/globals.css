@@ -134,7 +134,7 @@ blockquote .su-highlight { font-size: 12px; font-style: italic; }
 
 /* Portfolio grid: rows are sized in JS so every row fills the column. */
 .pf-grid { display: flex; flex-direction: column; gap: 6px; }
-.pf-row { display: flex; flex-direction: row; gap: 6px; width: 100%; align-items: stretch; }
+.pf-row { display: flex; flex-direction: row; gap: 6px; width: 100%; align-items: stretch; justify-content: center; }
 .pf-stack { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
 .pf-item { position: relative; margin: 0; overflow: hidden; background: #111; flex: 0 0 auto; box-sizing: border-box; }
 .pf-link { display: block; width: 100%; height: 100%; color: #fff; text-decoration: none; }

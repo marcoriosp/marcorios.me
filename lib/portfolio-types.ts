@@ -29,4 +29,6 @@ export interface PortfolioShow {
   thumb?: string;
   width?: number;
   height?: number;
+  /** Row group under Concerts; see `PortfolioItem.row`. */
+  row?: string;
 }

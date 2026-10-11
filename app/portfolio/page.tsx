@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ContentWithSidebar, PageHeader, SiteShell } from "@/components/site-shell";
+import { ContentFull, PageHeader, SiteShell } from "@/components/site-shell";
 import { portfolioItems } from "@/lib/portfolio-data";
 import { PortfolioGallery } from "./portfolio-gallery";
 
@@ -14,14 +14,14 @@ export default function PortfolioPage() {
   return (
     <SiteShell current="/portfolio/">
       <PageHeader title="Portfolio" image={HERO_IMAGE} />
-      <ContentWithSidebar>
+      <ContentFull>
         <article className="page type-page status-publish has-post-thumbnail hentry">
           <div className="entry-content">
             <PortfolioGallery items={portfolioItems} />
           </div>
           <footer className="entry-footer" />
         </article>
-      </ContentWithSidebar>
+      </ContentFull>
     </SiteShell>
   );
 }

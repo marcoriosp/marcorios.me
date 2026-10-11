@@ -14,8 +14,8 @@ const TABS: { id: Filter; label: string }[] = [
   { id: "brand", label: "Brand Launch" },
 ];
 
-/** Content width of the 9/12 column on desktop; used until the real width is measured. */
-const DEFAULT_WIDTH = 878;
+/** Content width of the full-width column on desktop; used until the real width is measured. */
+const DEFAULT_WIDTH = 1180;
 /** Tiles revealed initially and on each infinite-scroll step. */
 const PAGE_SIZE = 20;
 
@@ -52,7 +52,7 @@ export function PortfolioGallery({ items }: { items: PortfolioItem[] }) {
     if (filter !== "concert") return matches;
     return matches.flatMap((item) =>
       item.shows
-        ? item.shows.map((show) => ({ ...item, ...show, shows: undefined, lead: undefined, row: undefined }))
+        ? item.shows.map((show) => ({ ...item, shows: undefined, lead: undefined, row: undefined, ...show }))
         : [item],
     );
   }, [items, filter, year]);
@@ -67,7 +67,7 @@ export function PortfolioGallery({ items }: { items: PortfolioItem[] }) {
     let count = 0;
     while (count < rows.length && tiles < limit) {
       const row = rows[count++];
-      tiles += row.kind === "row" ? row.tiles.length : 1 + row.stack.length;
+      tiles += row.kind === "row" ? row.tiles.length : 1 + row.stack.length + (row.extra?.length ?? 0);
     }
     return count;
   }, [rows, limit]);
@@ -207,6 +207,7 @@ export function PortfolioGallery({ items }: { items: PortfolioItem[] }) {
                 {row.stack.map((t) => renderTile(t, r === 0))}
               </div>
               {row.stackFirst && renderTile(row.feature, r === 0)}
+              {row.extra?.map((t) => renderTile(t, r === 0))}
             </div>
           ) : (
             <div key={r} className={`pf-row${row.tiles.length === 2 ? " pf-pair" : ""}`}>

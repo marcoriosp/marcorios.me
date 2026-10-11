@@ -8,10 +8,16 @@ const MOBILE = 600;
 const MOBILE_LOOKAHEAD = 10;
 /** Max months between a horizontal and the verticals placed beside it. */
 const PAIR_WINDOW = 12;
-/** Max tiles in a justified row, so runs of posters stay large. */
-const MAX_ROW = 3;
+/** Max tiles in a justified row. */
+const MAX_ROW = 4;
+/** Max tiles that may join a feature cluster to bring it down to row height. */
+const MAX_CLUSTER_EXTRAS = 3;
+/** Narrowest stack allowed once extra tiles share a cluster's row. */
+const MIN_STACK = 140;
 /** A lone vertical beside a horizontal must render at least this multiple of the row height. */
 const MIN_PAIR_SCALE = 1.4;
+/** Max height of a desktop row, as a multiple of the target row height; shorter rows are centered. */
+const MAX_ROW_SCALE = 2.6;
 /** Width share of the lead tile in a grouped row with two stacked tiles; the stack crops to fit. */
 const GROUP_FEATURE_SHARE = 0.5;
 
@@ -29,7 +35,15 @@ export interface Tile {
 
 export type LayoutRow =
   | { kind: "row"; tiles: Tile[] }
-  | { kind: "cluster"; feature: Tile; stackWidth: number; stack: [Tile, Tile]; stackFirst?: boolean };
+  | {
+      kind: "cluster";
+      feature: Tile;
+      stackWidth: number;
+      stack: [Tile, Tile];
+      stackFirst?: boolean;
+      /** Tiles after the feature and stack, sharing the feature's height. */
+      extra?: Tile[];
+    };
 
 interface Node {
   index: number;
@@ -78,24 +92,47 @@ function nearestVerticals(pool: Node[], from: number, count: number, used: Set<n
     .map(({ i }) => i);
 }
 
-/** Feature tile beside two stacked verticals; null when the stack would be too narrow. */
-function cluster(feature: Node, v1: Node, v2: Node, container: number): LayoutRow | null {
-  const ws = (container - GAP * (feature.ar + 1)) / (feature.ar * (1 / v1.ar + 1 / v2.ar) + 1);
-  if (ws < minStackWidth(container)) return null;
-  const h1 = ws / v1.ar;
-  const h2 = ws / v2.ar;
-  const height = h1 + GAP + h2;
-  if (height > container * 1.35) return null;
-  const stackWidth = Math.round(ws);
-  return {
-    kind: "cluster",
-    feature: { index: feature.index, width: container - GAP - stackWidth, height: Math.round(height) },
-    stackWidth,
-    stack: [
-      { index: v1.index, width: stackWidth, height: Math.round(h1) },
-      { index: v2.index, width: stackWidth, height: Math.round(h2) },
-    ],
-  };
+/**
+ * Feature tile beside two stacked verticals. When that would be taller than `maxHeight`, up
+ * to `extras.length` more tiles join the row (in order) until it fits. Null when the stack
+ * would be too narrow or the row can't be brought under `maxHeight`.
+ */
+function cluster(
+  feature: Node,
+  v1: Node,
+  v2: Node,
+  extras: Node[],
+  container: number,
+  maxHeight: number,
+): { row: LayoutRow; extras: Node[] } | null {
+  const k = 1 / v1.ar + 1 / v2.ar;
+  for (let n = 0; n <= extras.length; n++) {
+    const side = extras.slice(0, n);
+    const height =
+      (container - GAP * (1 + n) + GAP / k) / (feature.ar + 1 / k + side.reduce((sum, e) => sum + e.ar, 0));
+    const ws = (height - GAP) / k;
+    if (ws < (n ? MIN_STACK : minStackWidth(container))) return null;
+    if (height > maxHeight) continue;
+    const h = Math.round(height);
+    const stackWidth = Math.round(ws);
+    const h1 = Math.round(ws / v1.ar);
+    const extra = side.map((e) => ({ index: e.index, width: Math.floor(e.ar * height), height: h }));
+    const featureWidth = container - GAP * (1 + n) - stackWidth - extra.reduce((sum, t) => sum + t.width, 0);
+    return {
+      row: {
+        kind: "cluster",
+        feature: { index: feature.index, width: featureWidth, height: h },
+        stackWidth,
+        stack: [
+          { index: v1.index, width: stackWidth, height: h1 },
+          { index: v2.index, width: stackWidth, height: h - GAP - h1 },
+        ],
+        extra: extra.length ? extra : undefined,
+      },
+      extras: side,
+    };
+  }
+  return null;
 }
 
 /** Feature at a fixed width share beside two stacked tiles splitting its height evenly. */
@@ -176,12 +213,17 @@ function layoutMobile(pool: Node[], container: number): LayoutRow[] {
  * 0. Items sharing a `row` key form one row; a group of three with a `lead` item shows it
  *    at `GROUP_FEATURE_SHARE` of the width beside the other two stacked, the stack on the
  *    left when it holds the group's newest item.
- * 1. The first tile is large, with its two nearest-dated verticals stacked beside it.
+ * 1. The first tile is large, with its two nearest-dated verticals stacked beside it when
+ *    there are two; otherwise it is placed like any other tile. A cluster taller than
+ *    `MAX_ROW_SCALE` row heights takes up to `MAX_CLUSTER_EXTRAS` nearby tiles beside it.
  * 2. Each horizontal tile takes its two nearest-dated verticals (within `PAIR_WINDOW` months)
  *    as a stack, or a single vertical beside it when the stack would be too narrow and the
  *    pair stays tall enough (`MIN_PAIR_SCALE`).
  * 3. Remaining tiles fill justified rows of at most `MAX_ROW` tiles, horizontals with
  *    horizontals and verticals with verticals.
+ * No row holds a single tile: a lone leftover joins the nearest justified row, or else the
+ * nearest stack is split into two rows of two; only a single visible item renders alone,
+ * capped at twice the row height. Rows taller than `MAX_ROW_SCALE` row heights shrink to fit.
  * Rows are then ordered by their newest tile.
  */
 export function layoutPortfolio(items: PortfolioItem[], container: number): LayoutRow[] {
@@ -212,61 +254,97 @@ export function layoutPortfolio(items: PortfolioItem[], container: number): Layo
     );
   }
 
-  if (!used.has(0)) {
-    used.add(0);
-    const heroSide = nearestVerticals(pool, 0, 2, used);
-    const hero =
-      heroSide.length === 2 ? cluster(pool[0], pool[heroSide[0]], pool[heroSide[1]], container) : null;
-    if (hero) {
-      heroSide.forEach((i) => used.add(i));
-      rows.push(hero);
-    } else {
-      rows.push(justify([pool[0]], container));
-    }
-  }
+  /** Rows built below, kept as nodes so a lone leftover tile can join one. */
+  const loose = new Map<LayoutRow, Node[]>();
+  const stacks = new Map<LayoutRow, Node[]>();
+  const pushRow = (nodes: Node[]) => {
+    const row = justify(nodes, container);
+    loose.set(row, nodes);
+    rows.push(row);
+  };
+  const th = targetHeight(container);
+  const cap = th * MAX_ROW_SCALE;
+  /** Cluster `feature` with the two stacked `side` tiles plus nearby extras; false if it can't fit. */
+  const placeCluster = (feature: number, side: number[]) => {
+    if (side.length !== 2) return false;
+    const taken = new Set([...used, feature, ...side]);
+    const extras = nearestVerticals(pool, feature, MAX_CLUSTER_EXTRAS, taken).map((i) => pool[i]);
+    const built = cluster(pool[feature], pool[side[0]], pool[side[1]], extras, container, cap);
+    if (!built) return false;
+    const nodes = [pool[feature], pool[side[0]], pool[side[1]], ...built.extras];
+    nodes.forEach((n) => used.add(n.index));
+    stacks.set(built.row, nodes);
+    rows.push(built.row);
+    return true;
+  };
 
-  for (let i = 1; i < pool.length; i++) {
+  if (!used.has(0)) placeCluster(0, nearestVerticals(pool, 0, 2, used));
+
+  for (let i = 0; i < pool.length; i++) {
     if (used.has(i) || pool[i].ar <= HORIZONTAL) continue;
     const side = nearestVerticals(pool, i, 2, used);
-    const stacked = side.length === 2 ? cluster(pool[i], pool[side[0]], pool[side[1]], container) : null;
-    if (stacked) {
-      [i, ...side].forEach((k) => used.add(k));
-      rows.push(stacked);
-    } else if (
+    if (placeCluster(i, side)) continue;
+    if (
       side.length &&
       (container - GAP) / (pool[i].ar + pool[side[0]].ar) >= targetHeight(container) * MIN_PAIR_SCALE
     ) {
       [i, side[0]].forEach((k) => used.add(k));
-      rows.push(justify([pool[i], pool[side[0]]], container));
+      pushRow([pool[i], pool[side[0]]]);
     }
   }
 
-  const th = targetHeight(container);
   const fits = (row: Node[], node: Node) =>
     row.length < 2 ||
     (row.length < MAX_ROW && (row.reduce((sum, n) => sum + n.ar, 0) + node.ar) * th + GAP * row.length <= container);
   const open: Record<"wide" | "tall", Node[]> = { wide: [], tall: [] };
-  for (let i = 1; i < pool.length; i++) {
+  for (let i = 0; i < pool.length; i++) {
     if (used.has(i)) continue;
     const node = pool[i];
     const key = node.ar > HORIZONTAL ? "wide" : "tall";
     if (open[key].length && !fits(open[key], node)) {
-      rows.push(justify(open[key], container));
+      pushRow(open[key]);
       open[key] = [];
     }
     open[key].push(node);
   }
   const rest = [...open.wide, ...open.tall];
-  if (rest.length) rows.push(justify(rest, container));
+  if (rest.length > 1) {
+    pushRow(rest);
+  } else if (rest.length === 1) {
+    const lone = rest[0];
+    const nearestOf = (rowsByNodes: Map<LayoutRow, Node[]>) =>
+      [...rowsByNodes.entries()].sort(
+        ([, a], [, b]) =>
+          Math.min(...a.map((n) => Math.abs(n.index - lone.index))) -
+          Math.min(...b.map((n) => Math.abs(n.index - lone.index))),
+      )[0];
+    const row = nearestOf(loose);
+    const stack = row ? undefined : nearestOf(stacks);
+    if (row) {
+      rows[rows.indexOf(row[0])] = justify([...row[1], lone].sort((a, b) => a.index - b.index), container);
+    } else if (stack) {
+      const nodes = [...stack[1], lone].sort((a, b) => a.index - b.index);
+      rows.splice(rows.indexOf(stack[0]), 1, justify(nodes.slice(0, 2), container), justify(nodes.slice(2), container));
+    } else {
+      const height = Math.min(container / lone.ar, th * 2);
+      rows.push({ kind: "row", tiles: [{ index: lone.index, width: Math.round(lone.ar * height), height: Math.round(height) }] });
+    }
+  }
 
+  const capped = rows.map((row): LayoutRow => {
+    if (row.kind !== "row" || row.tiles[0].height <= cap) return row;
+    const scale = cap / row.tiles[0].height;
+    return { kind: "row", tiles: row.tiles.map((t) => ({ ...t, width: Math.floor(t.width * scale), height: Math.round(cap) })) };
+  });
   const newest = (row: LayoutRow) => Math.min(...rowIndices(row));
-  return rows.sort((a, b) => newest(a) - newest(b));
+  return capped.sort((a, b) => newest(a) - newest(b));
 }
 
 function rowIndices(row: LayoutRow): number[] {
   if (row.kind === "row") return row.tiles.map((t) => t.index);
   const stack = row.stack.map((t) => t.index);
-  return row.stackFirst ? [...stack, row.feature.index] : [row.feature.index, ...stack];
+  const extra = (row.extra ?? []).map((t) => t.index);
+  return [...(row.stackFirst ? [...stack, row.feature.index] : [row.feature.index, ...stack]), ...extra];
 }
 
 /** Visible items in the order the layout displays them (used for lightbox navigation). */

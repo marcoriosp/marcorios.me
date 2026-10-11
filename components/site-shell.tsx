@@ -34,6 +34,19 @@ export function PageHeader({ title, image }: { title: ReactNode; image?: string 
   );
 }
 
+/** Main column across the full grid width, without the sidebar. */
+export function ContentFull({ children }: { children: ReactNode }) {
+  return (
+    <div className="grid grid-pad">
+      <div id="primary" className="content-area col-1-1">
+        <main id="main" className="site-main" role="main">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
+
 /** Main column plus the right-hand widget sidebar. */
 export function ContentWithSidebar({ children, archive = false }: { children: ReactNode; archive?: boolean }) {
   return (

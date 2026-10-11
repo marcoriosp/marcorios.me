@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Markdown } from "@/components/markdown";
-import { ContentWithSidebar, PageHeader, SiteShell } from "@/components/site-shell";
+import { ContentFull, PageHeader, SiteShell } from "@/components/site-shell";
 import { getPost, publicationsPage } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default function PublicationsPage() {
   return (
     <SiteShell current="/publications/">
       <PageHeader title={title} image={image} />
-      <ContentWithSidebar>
+      <ContentFull>
         <article className="page type-page status-publish has-post-thumbnail hentry">
           <div className="entry-content">
             <Markdown source={body} />
@@ -47,7 +47,7 @@ export default function PublicationsPage() {
           </div>
           <footer className="entry-footer" />
         </article>
-      </ContentWithSidebar>
+      </ContentFull>
     </SiteShell>
   );
 }

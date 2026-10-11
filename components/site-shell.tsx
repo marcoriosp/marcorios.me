@@ -34,36 +34,14 @@ export function PageHeader({ title, image }: { title: ReactNode; image?: string 
   );
 }
 
-/** Main column across the full grid width, without the sidebar. */
-export function ContentFull({ children }: { children: ReactNode }) {
+/** Main column across the full grid width. */
+export function ContentFull({ children, archive = false }: { children: ReactNode; archive?: boolean }) {
   return (
     <div className="grid grid-pad">
-      <div id="primary" className="content-area col-1-1">
+      <div id="primary" className={`content-area col-1-1${archive ? " blog-archive" : ""}`}>
         <main id="main" className="site-main" role="main">
           {children}
         </main>
-      </div>
-    </div>
-  );
-}
-
-/** Main column plus the right-hand widget sidebar. */
-export function ContentWithSidebar({ children, archive = false }: { children: ReactNode; archive?: boolean }) {
-  return (
-    <div className="grid grid-pad">
-      <div id="primary" className={`content-area col-9-12${archive ? " blog-archive" : ""}`}>
-        <main id="main" className="site-main" role="main">
-          {children}
-        </main>
-      </div>
-      <div id="secondary" className="widget-area col-3-12" role="complementary">
-        <aside className="widget widget_text">
-          <div className="textwidget">
-            <a className="twitter-timeline" href="https://twitter.com/marcoriosp" target="_blank" rel="noopener noreferrer">
-              Tweets by marcoriosp
-            </a>
-          </div>
-        </aside>
       </div>
     </div>
   );

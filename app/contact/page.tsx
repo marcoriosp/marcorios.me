@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
-import { ContentWithSidebar, PageHeader, SiteShell } from "@/components/site-shell";
+import { ContentFull, PageHeader, SiteShell } from "@/components/site-shell";
 import { EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -12,14 +12,14 @@ export default function ContactPage() {
   return (
     <SiteShell current="/contact/">
       <PageHeader title="Contact" />
-      <ContentWithSidebar>
+      <ContentFull>
         <article className="page type-page status-publish hentry">
           <div className="entry-content">
             <ContactForm email={EMAIL} />
           </div>
           <footer className="entry-footer" />
         </article>
-      </ContentWithSidebar>
+      </ContentFull>
     </SiteShell>
   );
 }

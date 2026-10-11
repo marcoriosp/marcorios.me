@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CategoryLinks } from "@/components/archive-list";
 import { Markdown } from "@/components/markdown";
-import { ContentWithSidebar, PageHeader, SiteShell } from "@/components/site-shell";
+import { ContentFull, PageHeader, SiteShell } from "@/components/site-shell";
 import { adjacentPosts, formatDate, getPost, posts, truncateWords } from "@/lib/content";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -59,7 +59,7 @@ export default async function PostPage({ params }: Props) {
           on <time dateTime={post.date}>{formatDate(post.date)}</time>
         </div>
       </header>
-      <ContentWithSidebar>
+      <ContentFull>
         <article className="post type-post status-publish hentry">
           <div className="entry-content">
             <Markdown source={post.body} />
@@ -87,7 +87,7 @@ export default async function PostPage({ params }: Props) {
             )}
           </div>
         </nav>
-      </ContentWithSidebar>
+      </ContentFull>
     </SiteShell>
   );
 }

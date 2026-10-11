@@ -6,9 +6,9 @@ export const TWITTER_HANDLE = "marcoriosp";
 
 export const MENU = [
   { href: "/", label: "Home" },
-  { href: "/blog/", label: "Blog" },
-  { href: "/publications/", label: "Publications" },
   { href: "/portfolio/", label: "Portfolio" },
+  { href: "/publications/", label: "Publications" },
+  { href: "/blog/", label: "Blog" },
   { href: "/contact/", label: "Contact" },
 ];
 

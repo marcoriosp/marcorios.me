@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { type Archive, type ArchiveKind, getArchive, pageHref, parsePage } from "@/lib/content";
 import { ArchiveList } from "./archive-list";
-import { ContentWithSidebar, PageHeader, SiteShell } from "./site-shell";
+import { ContentFull, PageHeader, SiteShell } from "./site-shell";
 
 export function ArchivePage({ archive, page }: { archive: Archive; page: number }) {
   return (
     <SiteShell current={archive.kind === "blog" ? "/blog/" : undefined}>
       <PageHeader title={archive.heading} />
-      <ContentWithSidebar archive>
+      <ContentFull archive>
         <ArchiveList archive={archive} page={page} />
-      </ContentWithSidebar>
+      </ContentFull>
     </SiteShell>
   );
 }

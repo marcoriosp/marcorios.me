@@ -6,6 +6,12 @@ a { color: #ea474b; }
 #site-navigation button:hover { background: none; }
 body, p { font-size: 15px; }
 
+/* Header scrim: keeps the white logo and menu readable over light hero photos. The extra
+   bottom padding lets the gradient fade out instead of ending in a hard band. */
+.site-header { padding-bottom: 72px; background: linear-gradient(to bottom, rgba(16,18,24,.78) 0%, rgba(16,18,24,.5) 45%, rgba(16,18,24,.18) 75%, rgba(16,18,24,0) 100%); pointer-events: none; }
+.site-header .grid { pointer-events: auto; }
+.main-navigation a, .menu-toggle { text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+
 /* Portfolio toolbar */
 .pf-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 20px; padding-bottom: 12px; border-bottom: 1px solid #e5e5e5; }
 .pf-tabs { display: flex; flex-wrap: wrap; gap: 6px; }

@@ -3,10 +3,13 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./styles/theme.css";
 import "./styles/font-awesome.css";
-import "./styles/push-menu.css";
+import "./styles/mobile-menu.css";
 import "./globals.css";
 
 const GA_ID = "G-48GZZY1H8P";
+const GTM_ID = "GTM-TP64CL";
+
+const GTM_BOOT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`;
 
 const FONTS =
   "https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic|Open+Sans:400italic,700italic,400,700&display=swap";
@@ -30,6 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-US">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: GTM_BOOT }} />
         <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -41,7 +45,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
       </head>
-      <body className="group-blog cbp-spmenu-push">
+      <body className="group-blog">
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         {children}
         <ScrollReveal />
       </body>

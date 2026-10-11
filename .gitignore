@@ -89,6 +89,16 @@ nohup*
 
 # next.js build output
 .next
+next-env.d.ts
+
+# vinext / Cloudflare Workers build output
+/dist/
+.vinext/
+.wrangler/
+.dev.vars*
+
+# Generated from old_site/ by scripts/sync-legacy.mjs
+/public/
 
 # nuxt.js build output
 .nuxt

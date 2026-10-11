@@ -1,0 +1,62 @@
+/* Theme customizer overrides from the original WordPress site (sensible-wp). */
+h1, h2, h3, h4, h5, h6 { font-family: "PT Sans", sans-serif; }
+body, button, input, select, textarea { font-family: "Open Sans", sans-serif; }
+body { border-color: #ea474b; }
+a { color: #ea474b; }
+#site-navigation button:hover { background: none; }
+body, p { font-size: 15px; }
+
+/* Portfolio toolbar */
+.pf-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 20px; padding-bottom: 12px; border-bottom: 1px solid #e5e5e5; }
+.pf-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-tab { font-family: "PT Sans", sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1; padding: 9px 14px; border: 1px solid #ddd; border-radius: 999px; background: #fff !important; color: #333 !important; cursor: pointer; box-shadow: none; transition: background .2s, color .2s, border-color .2s; }
+.pf-tab:hover, .pf-tab:focus-visible { border-color: #ea474b; color: #ea474b !important; background: #fff !important; }
+.pf-tab.is-active { background: #ea474b !important; border-color: #ea474b; color: #fff !important; }
+.pf-count { font-weight: 400; opacity: .7; margin-left: 2px; }
+.pf-year select { font-size: 13px; padding: 7px 10px; border: 1px solid #ddd; border-radius: 6px; background: #fff; color: #333 !important; }
+.pf-empty { color: #777; }
+
+/* Portfolio grid: rows are sized in JS so every row fills the column. */
+.pf-grid { display: flex; flex-direction: column; gap: 6px; }
+.pf-row { display: flex; flex-direction: row; gap: 6px; width: 100%; align-items: stretch; }
+.pf-stack { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }
+.pf-item { position: relative; margin: 0; overflow: hidden; background: #111; flex: 0 0 auto; box-sizing: border-box; }
+.pf-link { display: block; width: 100%; height: 100%; color: #fff; text-decoration: none; }
+.pf-link img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.pf-link:hover img, .pf-link:focus-visible img { transform: scale(1.04); }
+.pf-item figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 36px 12px 10px; background: linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,.35) 60%, transparent); pointer-events: none; }
+.pf-meta { display: block; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #ff8a8d; }
+.pf-title { display: block; font-family: "PT Sans", sans-serif; font-size: 14px; font-weight: 700; line-height: 1.25; color: #fff; }
+
+/* Infinite scroll */
+.pf-loading { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 28px 0 8px; font-family: "PT Sans", sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #777; }
+.pf-spinner { width: 18px; height: 18px; border: 2px solid #e5e5e5; border-top-color: #ea474b; border-radius: 50%; animation: pf-spin .8s linear infinite; }
+@keyframes pf-spin { to { transform: rotate(360deg); } }
+
+/* Lightbox */
+.pf-lightbox { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 48px 64px; background: rgba(0,0,0,.88); cursor: zoom-out; }
+.pf-lightbox-figure { position: relative; margin: 0; max-width: 100%; max-height: 100%; cursor: default; }
+.pf-lightbox-figure img { display: block; max-width: calc(100vw - 128px); max-height: calc(100vh - 96px); width: auto; height: auto; }
+.pf-lightbox-figure figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 12px; background: linear-gradient(to top, rgba(0,0,0,.85), transparent); }
+.pf-lightbox-figure .pf-title { font-size: 16px; }
+.pf-lightbox-close, .pf-lightbox-nav { position: absolute; border: 0; background: none !important; color: #fff !important; cursor: pointer; line-height: 1; padding: 12px; opacity: .8; }
+.pf-lightbox-close:hover, .pf-lightbox-nav:hover { opacity: 1; }
+.pf-lightbox-close { top: 8px; right: 12px; font-size: 24px; }
+.pf-lightbox-nav { top: 50%; transform: translateY(-50%); font-size: 36px; }
+.pf-lightbox-nav.is-prev { left: 8px; }
+.pf-lightbox-nav.is-next { right: 8px; }
+
+@media all and (max-width: 768px) {
+  .pf-toolbar { flex-direction: column; align-items: stretch; }
+  .pf-title { font-size: 12px; }
+  .pf-lightbox { padding: 48px 8px; }
+  .pf-lightbox-figure img { max-width: calc(100vw - 16px); }
+  /* The prerendered grid is laid out for desktop; hide it until it is re-laid out for this width. */
+  .pf-grid:not([data-measured]) { visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pf-link img { transition: none; }
+  .pf-link:hover img { transform: none; }
+  .pf-spinner { animation-duration: 2.4s; }
+}

@@ -46,7 +46,28 @@ body, p { font-size: 15px; }
 .pf-lightbox-nav.is-prev { left: 8px; }
 .pf-lightbox-nav.is-next { right: 8px; }
 
+/* Footer contact card */
+.footer-contact h6 { margin-bottom: 28px; }
+.contact-card { max-width: 560px; margin: 0 auto; padding: 40px 32px 36px; background: #fff; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 12px 32px -18px rgba(36,40,48,.25); }
+.footer-contact .contact-icon { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: #fdecec; color: #d13939; }
+.footer-contact .contact-icon .fa { font-size: 22px; margin: 0; }
+.contact-lede { margin: 16px 0 6px; color: #666; font-size: 15px; line-height: 1.6; }
+.contact-email { display: inline-block; font-family: "PT Sans", sans-serif; font-size: 26px; font-weight: 700; line-height: 1.3; color: #242830 !important; text-decoration: none; word-break: break-word; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+.contact-email:hover, .contact-email:focus-visible { color: #d13939 !important; border-bottom-color: #ea474b; }
+.contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 24px; }
+.contact-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 0 22px; border-radius: 999px; border: 1px solid transparent; font-family: "PT Sans", sans-serif; font-size: 14px; font-weight: 700; letter-spacing: .04em; line-height: 1; text-decoration: none; cursor: pointer; box-shadow: none; transition: background-color .2s, border-color .2s, color .2s; }
+.footer-contact .contact-btn .fa { font-size: 14px; margin: 0; }
+.contact-btn.is-primary { background: #d13939; color: #fff !important; }
+.contact-btn.is-primary:hover { background: #b82f2f; }
+.contact-btn.is-secondary { background: #fff !important; border-color: #ddd; color: #333 !important; }
+.contact-btn.is-secondary:hover { border-color: #d13939; color: #d13939 !important; }
+.contact-btn:focus-visible, .contact-email:focus-visible { outline: 2px solid #d13939; outline-offset: 3px; }
+
 @media all and (max-width: 768px) {
+  .contact-card { padding: 32px 20px 28px; }
+  .contact-email { font-size: 21px; }
+  .contact-actions { flex-direction: column; }
+  .contact-btn { width: 100%; }
   .pf-toolbar { flex-direction: column; align-items: stretch; }
   .pf-title { font-size: 12px; }
   .pf-lightbox { padding: 48px 8px; }

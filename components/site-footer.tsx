@@ -1,3 +1,5 @@
+import { CopyEmailButton } from "./copy-email-button";
+
 const EMAIL = "marco@marcorios.me";
 
 const SOCIAL = [
@@ -34,32 +36,21 @@ export function SiteFooter() {
         <div className="grid grid-pad">
           <div className="col-1-1">
             <h6>Contact Information</h6>
-          </div>
-          <div className="col-1-3">
-            <div className="footer-block">
-              <i className="fa fa-skype" />
-              <h5>Skype</h5>
-              <p>
-                <a href="skype:marcoriosp">marcoriosp</a>
-              </p>
-            </div>
-          </div>
-          <div className="col-1-3">
-            <div className="footer-block">
-              <i className="fa fa-envelope-o" />
-              <h5>E-mail</h5>
-              <p>
-                <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
-              </p>
-            </div>
-          </div>
-          <div className="col-1-3">
-            <div className="footer-block">
-              <i className="fa fa-whatsapp" />
-              <h5>Whatsapp</h5>
-              <p>
-                <a href="https://wa.me/56953492494">+56 9 5349 2494</a>
-              </p>
+            <div className="contact-card">
+              <span className="contact-icon" aria-hidden="true">
+                <i className="fa fa-envelope-o" />
+              </span>
+              <p className="contact-lede">For bookings, collaborations and project enquiries.</p>
+              <a className="contact-email" href={`mailto:${EMAIL}`}>
+                {EMAIL}
+              </a>
+              <div className="contact-actions">
+                <a className="contact-btn is-primary" href={`mailto:${EMAIL}`}>
+                  <i className="fa fa-paper-plane" aria-hidden="true" />
+                  Send an email
+                </a>
+                <CopyEmailButton email={EMAIL} />
+              </div>
             </div>
           </div>
         </div>

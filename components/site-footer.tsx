@@ -1,25 +1,12 @@
+import { EMAIL, SOCIAL } from "@/lib/site";
 import { CopyEmailButton } from "./copy-email-button";
 
-const EMAIL = "marco@marcorios.me";
-
-const SOCIAL = [
-  { href: "https://www.facebook.com/mrios82", icon: "fa-facebook", label: "Facebook" },
-  { href: "https://twitter.com/marcoriosp", icon: "fa-twitter", label: "Twitter" },
-  { href: "https://www.linkedin.com/in/marcorp", icon: "fa-linkedin", label: "LinkedIn" },
-  { href: "https://www.instagram.com/tempusperegrinans", icon: "fa-instagram", label: "Instagram" },
-  { href: "https://www.youtube.com/channel/UCRo-YXRDsG1g8YG9v17WuYg", icon: "fa-youtube", label: "YouTube" },
-  { href: "skype:marcoriosp", icon: "fa-skype", label: "Skype" },
-  { href: "https://github.com/marcoriosp", icon: "fa-github", label: "GitHub" },
-  { href: "https://open.spotify.com/user/117865297", icon: "fa-spotify", label: "Spotify" },
-  { href: `mailto:${EMAIL}`, icon: "fa-envelope", label: "E-mail" },
-];
-
-export function SiteFooter() {
+export function SocialBar() {
   return (
-    <>
-      <div className="social-bar-none">
-        <div className="grid grid-pad">
-          <div className="col-1-1">
+    <div className="social-bar-none">
+      <div className="grid grid-pad">
+        <div className="col-1-1">
+          <div className="reveal" data-reveal="fadeIn">
             <ul className="social-media-icons">
               {SOCIAL.map((s) => (
                 <li key={s.icon}>
@@ -32,6 +19,14 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export function SiteFooter() {
+  return (
+    <>
+      <SocialBar />
       <div className="footer-contact">
         <div className="grid grid-pad">
           <div className="col-1-1">

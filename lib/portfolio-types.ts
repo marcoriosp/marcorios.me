@@ -14,4 +14,19 @@ export interface PortfolioItem {
   thumb: string;
   width: number;
   height: number;
+  /** Placed before the other tiles in its row. */
+  lead?: boolean;
+  /** Items sharing this key are placed together in one row on wide screens (three with a lead: lead large, others stacked). */
+  row?: string;
+  /** Individual shows of a tour, each listed as its own tile under Concerts. */
+  shows?: PortfolioShow[];
+}
+
+/** A single show; image fields fall back to the tour's own. */
+export interface PortfolioShow {
+  title: string;
+  image?: string;
+  thumb?: string;
+  width?: number;
+  height?: number;
 }

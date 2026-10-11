@@ -1,16 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { MENU } from "@/lib/site";
 
-const MENU = [
-  { href: "/", label: "Home" },
-  { href: "/blog/", label: "Blog" },
-  { href: "/publications/", label: "Publications" },
-  { href: "/portfolio/", label: "Portfolio" },
-  { href: "/contact/", label: "Contact" },
-];
-
-function MenuItems({ current }: { current: string }) {
+function MenuItems({ current }: { current?: string }) {
   return (
     <ul className="menu">
       {MENU.map((item) => {
@@ -30,7 +23,7 @@ function MenuItems({ current }: { current: string }) {
   );
 }
 
-export function SiteHeader({ current }: { current: string }) {
+export function SiteHeader({ current }: { current?: string }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

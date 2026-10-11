@@ -1,0 +1,31 @@
+/* Font Awesome 4.7.0 (subset) by @davegandy - http://fontawesome.io
+ * License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License) */
+@font-face{font-family:"FontAwesome";src:url("/theme/fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"),url("/theme/fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");font-weight:normal;font-style:normal;font-display:block}
+.fa{display:inline-block;font:normal normal normal 14px/1 FontAwesome;font-size:inherit;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.fa-bars:before{content:"\f0c9"}
+.fa-briefcase:before{content:"\f0b1"}
+.fa-calendar:before{content:"\f073"}
+.fa-binoculars:before{content:"\f1e5"}
+.fa-clock-o:before{content:"\f017"}
+.fa-envelope:before{content:"\f0e0"}
+.fa-envelope-o:before{content:"\f003"}
+.fa-facebook:before{content:"\f09a"}
+.fa-twitter:before{content:"\f099"}
+.fa-linkedin:before{content:"\f0e1"}
+.fa-instagram:before{content:"\f16d"}
+.fa-youtube:before{content:"\f167"}
+.fa-youtube-play:before{content:"\f16a"}
+.fa-skype:before{content:"\f17e"}
+.fa-github:before{content:"\f09b"}
+.fa-spotify:before{content:"\f1bc"}
+.fa-paper-plane:before{content:"\f1d8"}
+.fa-copy:before{content:"\f0c5"}
+.fa-check:before{content:"\f00c"}
+.fa-file-pdf-o:before{content:"\f1c1"}
+.fa-chevron-left:before{content:"\f053"}
+.fa-chevron-right:before{content:"\f054"}
+.fa-times:before{content:"\f00d"}
+.fa-plus:before{content:"\f067"}
+.fa-minus:before{content:"\f068"}
+.fa-quote-left:before{content:"\f10d"}
+.fa-user:before{content:"\f007"}

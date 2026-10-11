@@ -8,10 +8,10 @@ type Filter = "all" | PortfolioCategory;
 
 const TABS: { id: Filter; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "brand", label: "Brand Experiences" },
-  { id: "tour", label: "Tours" },
-  { id: "festival", label: "Festivals" },
   { id: "concert", label: "Concerts" },
+  { id: "festival", label: "Festivals" },
+  { id: "tour", label: "Tours" },
+  { id: "brand", label: "Brand Launch" },
 ];
 
 /** Content width of the 9/12 column on desktop; used until the real width is measured. */
@@ -33,7 +33,8 @@ export function PortfolioGallery({ items }: { items: PortfolioItem[] }) {
 
   const counts = useMemo(() => {
     const c: Record<Filter, number> = { all: items.length, brand: 0, tour: 0, festival: 0, concert: 0 };
-    for (const item of items) for (const cat of item.categories) c[cat]++;
+    for (const item of items)
+      for (const cat of item.categories) c[cat] += cat === "concert" ? (item.shows?.length ?? 1) : 1;
     return c;
   }, [items]);
 
@@ -42,15 +43,19 @@ export function PortfolioGallery({ items }: { items: PortfolioItem[] }) {
     [items],
   );
 
-  const visible = useMemo(
-    () =>
-      items.filter(
-        (i) =>
-          (filter === "all" || i.categories.includes(filter)) &&
-          (year === "all" || String(i.year) === year),
-      ),
-    [items, filter, year],
-  );
+  const visible = useMemo(() => {
+    const matches = items.filter(
+      (i) =>
+        (filter === "all" || i.categories.includes(filter)) &&
+        (year === "all" || String(i.year) === year),
+    );
+    if (filter !== "concert") return matches;
+    return matches.flatMap((item) =>
+      item.shows
+        ? item.shows.map((show) => ({ ...item, ...show, shows: undefined, lead: undefined, row: undefined }))
+        : [item],
+    );
+  }, [items, filter, year]);
 
   const rows = useMemo(() => layoutPortfolio(visible, width), [visible, width]);
   const order = useMemo(() => displayOrder(rows), [rows]);
@@ -128,7 +133,7 @@ export function PortfolioGallery({ items }: { items: PortfolioItem[] }) {
     const item = visible[tile.index];
     return (
       <figure
-        key={item.image}
+        key={tile.index}
         className="pf-item"
         style={{ width: tile.width, height: tile.height }}
       >
@@ -197,10 +202,11 @@ export function PortfolioGallery({ items }: { items: PortfolioItem[] }) {
         {rows.slice(0, shownRows).map((row, r) =>
           row.kind === "cluster" ? (
             <div key={r} className="pf-row pf-cluster">
-              {renderTile(row.feature, r === 0)}
+              {!row.stackFirst && renderTile(row.feature, r === 0)}
               <div className="pf-stack" style={{ width: row.stackWidth }}>
                 {row.stack.map((t) => renderTile(t, r === 0))}
               </div>
+              {row.stackFirst && renderTile(row.feature, r === 0)}
             </div>
           ) : (
             <div key={r} className={`pf-row${row.tiles.length === 2 ? " pf-pair" : ""}`}>

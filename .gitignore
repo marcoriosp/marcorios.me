@@ -97,9 +97,6 @@ next-env.d.ts
 .wrangler/
 .dev.vars*
 
-# Generated from old_site/ by scripts/sync-legacy.mjs
-/public/
-
 # nuxt.js build output
 .nuxt
 

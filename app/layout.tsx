@@ -6,8 +6,8 @@ import "./styles/font-awesome.css";
 import "./styles/mobile-menu.css";
 import "./globals.css";
 
-const GA_ID = "G-48GZZY1H8P";
 const GTM_ID = "GTM-TP64CL";
+const GA_ID = "G-6EDTYK3JFN";
 
 const GTM_BOOT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`;
 
@@ -34,16 +34,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en-US">
       <head>
         <script dangerouslySetInnerHTML={{ __html: GTM_BOOT }} />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`,
+          }}
+        />
         <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={FONTS} />
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","${GA_ID}",{anonymize_ip:true});`,
-          }}
-        />
       </head>
       <body className="group-blog">
         <noscript>

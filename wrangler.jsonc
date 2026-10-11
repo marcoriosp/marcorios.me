@@ -1,9 +1,13 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "marcorios-me",
+  "name": "marcorios",
   "compatibility_date": "2026-10-11",
   "compatibility_flags": ["nodejs_compat"],
   "main": "vinext/server/fetch-handler",
+  "routes": [
+    { "pattern": "marcorios.me/*", "zone_name": "marcorios.me" },
+    { "pattern": "www.marcorios.me/*", "zone_name": "marcorios.me" }
+  ],
   "assets": {
     "directory": "dist/client",
     "not_found_handling": "none",

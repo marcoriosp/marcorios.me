@@ -78,8 +78,9 @@ pnpm run deploy   # build + deploy to Cloudflare Workers ("pnpm deploy" alone is
 
 ## Deploying
 
-The Worker is named `marcorios-me` (see `wrangler.jsonc`). It needs no environment variables or secrets.
+The Worker is named `marcorios` (see `wrangler.jsonc`). It needs no environment variables or secrets.
 
 1. `npx wrangler login` (once per machine).
-2. `pnpm run deploy` and check the `*.workers.dev` URL it prints.
-3. Move the domain: the site was previously served by the Cloudflare Pages project `marcorios`. Remove `marcorios.me` from that Pages project's custom domains, then add it to the Worker (Workers & Pages → `marcorios-me` → Settings → Domains & Routes → Custom domain), or add `"routes": [{ "pattern": "marcorios.me", "custom_domain": true }]` to `wrangler.jsonc` and redeploy.
+2. `pnpm run deploy`.
+
+`marcorios.me/*` and `www.marcorios.me/*` are Worker routes declared in `wrangler.jsonc`, on top of the zone's existing proxied DNS records. Deploys are manual: pushing to GitHub does not deploy the Worker. The old Cloudflare Pages project of the same name was deleted to free the name.
